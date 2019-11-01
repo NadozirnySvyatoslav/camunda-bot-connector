@@ -1,0 +1,3 @@
+/src/main/resources/configuration.xml
+/target/*
+!/target/*.war
