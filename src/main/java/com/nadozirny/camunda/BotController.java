@@ -98,9 +98,6 @@ public class BotController
 	    }
 
 	}
-
-    
-
     if (response!= null){
 		if (response.getEntity()!=null && response.getEntity().getContentLength()>0){
 		    result=EntityUtils.toString(response.getEntity());
