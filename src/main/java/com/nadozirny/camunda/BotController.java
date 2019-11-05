@@ -49,7 +49,7 @@ public class BotController
 	HashMap<String,String> bots=Config.getBots();
 	String process_key=bots.get(token);
 	String camunda_engine=Config.config().getString("camunda_engine");
-        LOGGER.debug("webhook bot: "+token+"  process: "+process_key);
+        LOGGER.debug("LOAD CONFIGURATION: bot="+token+"  process="+process_key);
 	JSONObject json=new JSONObject(data);
 	String result="";
 	JSONObject message=json.getJSONObject("message");
@@ -92,7 +92,7 @@ public class BotController
 	    if (message!=null)
 		correlationMessage.put("processVariables",(new JSONObject()).put("message",(new JSONObject()).put("value",message)));
 
-            LOGGER.debug("update process {} ",correlationMessage);
+            LOGGER.debug("UPDATE PROCESS: {} ",correlationMessage);
 
 	     post.setEntity(new StringEntity(correlationMessage.toString(),"UTF-8"));
 	     try{
@@ -108,7 +108,7 @@ public class BotController
 	     JSONObject body=new JSONObject();
 	     body.put("businessKey",business_key);
 	     body.put("variables", (new JSONObject()).put("message",(new JSONObject()).put("value",message)));
-             LOGGER.debug("start process {} ",body);
+             LOGGER.debug("START PROCESS: {} ",body);
 	     post.setEntity(new StringEntity(body.toString(),"UTF-8"));
 	     try{
 	        httpClient = HttpClients.createDefault();
@@ -122,9 +122,12 @@ public class BotController
 		if (response.getEntity()!=null && response.getEntity().getContentLength()>0){
 		    result=EntityUtils.toString(response.getEntity());
 		}else
-		    result="ok\n";
+		    result="{\"status\":\"ok\"}";
+        LOGGER.debug("ANSWER: {}",result);
 	return Response.status(response.getStatusLine().getStatusCode()).entity(result).build();
-    }else
+    }else{
+        LOGGER.error("Server error, no answer from Camunda server {}",camunda_engine);
 	return Response.status(500).entity("{\"error\":\"Server error, no answer from Camunda server\"}").build();
+    }
     }
 }
