@@ -22,7 +22,9 @@ import org.apache.http.util.EntityUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
 
-import org.apache.commons.configuration2.XMLConfiguration ;
+import org.apache.commons.configuration2.XMLConfiguration;
+import java.nio.charset.StandardCharsets;
+import java.io.ByteArrayOutputStream;
 
 import java.util.regex.*;
 
@@ -46,10 +48,23 @@ public class BotController
     @Produces(MediaType.APPLICATION_JSON)
     public Response message(@QueryParam("token") String token,String data) throws IOException
     {
+	if (token==null || token==""){
+	    LOGGER.error("Token error {}",token);
+	    return Response.status(404).entity("{\"error\":\"No token found\"}").build();
+	}
 	HashMap<String,String> bots=Config.getBots();
 	String process_key=bots.get(token);
-	String camunda_engine=Config.config().getString("camunda_engine");
+
+	if (process_key==null || process_key==""){
+	    LOGGER.error("Process error {}",token);
+	    return Response.status(404).entity("{\"error\":\"No process found\"}").build();
+	}
+
         LOGGER.debug("LOAD CONFIGURATION: bot="+token+"  process="+process_key);
+	String camunda_engine=Config.config().getString("camunda_engine");
+//	String camunda_engine="http://localhost:8080/engine-rest";
+        LOGGER.debug("LOAD CONFIGURATION: url="+camunda_engine);
+
 	JSONObject json=new JSONObject(data);
 	String result="";
 	JSONObject message=json.getJSONObject("message");
@@ -119,11 +134,8 @@ public class BotController
 	}
 
     if (response!= null){
-		if (response.getEntity()!=null && response.getEntity().getContentLength()>0){
-		    result=EntityUtils.toString(response.getEntity());
-		}else
-		    result="{\"status\":\"ok\"}";
-        LOGGER.debug("ANSWER: {}",result);
+        LOGGER.debug("RESPONSE: "+response.getStatusLine().getStatusCode()+" {}",response);
+	result="{\"status\":\"ok\"}";
 	return Response.status(response.getStatusLine().getStatusCode()).entity(result).build();
     }else{
         LOGGER.error("Server error, no answer from Camunda server {}",camunda_engine);

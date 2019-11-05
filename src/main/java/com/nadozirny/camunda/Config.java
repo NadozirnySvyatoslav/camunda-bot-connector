@@ -19,7 +19,7 @@ class Config{
 	int i=0;
 	while(true){
 	    if ((inst.config.getString("bots.bot("+i+").token") ==null) ||
-		 (inst.config.getString("bots.bot("+i+").process_key")==null) ) break;
+		 (inst.config.getString("bots.bot("+i+").process_key")==null) || i>65535 ) break;
 
 	    list.put(inst.config.getString("bots.bot("+i+").token"),
 		inst.config.getString("bots.bot("+i+").process_key"));
