@@ -27,8 +27,8 @@
 
 with your Telegram-bot tokens
 
-4. Deploy your BPMN-process (demo/test-bot.bpmn can be used as an example)
-
+4. Deploy your BPMN-process (![demo BPMN](demo/test-bot.bpmn) can be used as an example)
+Do not forget set your telegram-bot token in test-bot.bpmn
 ![BPMN process](demo/demo.PNG)
 
 
