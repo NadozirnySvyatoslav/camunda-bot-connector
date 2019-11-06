@@ -35,6 +35,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.HashMap;
+
+import java.util.regex.Matcher;  
+import java.util.regex.Pattern;  
  
 @Path("/")
 
@@ -52,30 +55,61 @@ public class BotController
 	    LOGGER.error("Token error {}",token);
 	    return Response.status(404).entity("{\"error\":\"No token found\"}").build();
 	}
-	HashMap<String,String> bots=Config.getBots();
-	String process_key=bots.get(token);
+
+	String process_key="";
+	String business_key="";
+	
+        HashMap<String,String> bots=Config.getBots();
+
+	String camunda_engine=Config.config().getString("camunda_engine");
+
+	if (camunda_engine==null || camunda_engine==""){
+	    LOGGER.error("Camunda url error camunda_engine= {}",camunda_engine);
+	    return Response.status(404).entity("{\"error\":\"No camunda_engine found\"}").build();
+	}
+
+        LOGGER.debug("LOAD CONFIGURATION: url="+camunda_engine);
+	LOGGER.debug("RECEIVED: {}",data);
+
+	JSONObject json=new JSONObject(data);
+	String result="";
+	JSONObject message=null;
+	JSONObject callback_query=null;
+	if (json.has("message"))
+	    message=json.getJSONObject("message");
+    	if (json.has("callback_query"))
+	    callback_query=json.getJSONObject("callback_query");
+
+	if (message != null){
+	    process_key=bots.get(token);	
+	    JSONObject from=message.getJSONObject("from");
+	    JSONObject chat=message.getJSONObject("chat");
+    	    int chat_id=chat.getInt("id");
+	    int from_id=from.getInt("id");
+	    business_key=chat_id+"_"+from_id;
+	}
+
+	if (callback_query != null){
+	    Pattern  p=Pattern.compile("([a-zA-A0-9_\\-]*):([a-zA-A0-9_\\-]*):([a-zA-A0-9_\\-]*)");
+	    Matcher m=p.matcher(callback_query.getString("data"));
+	    if (!m.matches()){
+		LOGGER.error("No callback->data process_key:business_key:data found= {}",callback_query.getString("data"));
+		return Response.status(200).entity("{\"error\":\"No callback->data process_key:business_key:data found\"}").build();
+
+	    }
+	    process_key=m.group(1);
+	    business_key=m.group(2);
+	    json.put("data",m.group(3));
+	}
 
 	if (process_key==null || process_key==""){
 	    LOGGER.error("Process error {}",token);
 	    return Response.status(404).entity("{\"error\":\"No process found\"}").build();
 	}
 
-        LOGGER.debug("LOAD CONFIGURATION: bot="+token+"  process="+process_key);
-	String camunda_engine=Config.config().getString("camunda_engine");
-//	String camunda_engine="http://localhost:8080/engine-rest";
-        LOGGER.debug("LOAD CONFIGURATION: url="+camunda_engine);
+        LOGGER.debug("DATA : bot="+token+"  process="+process_key);
 
-	JSONObject json=new JSONObject(data);
-	String result="";
-	JSONObject message=json.getJSONObject("message");
-	JSONObject from=message.getJSONObject("from");
-	JSONObject chat=message.getJSONObject("chat");
-	int chat_id=chat.getInt("id");
-	int from_id=from.getInt("id");
-
-	String business_key=chat_id+"_"+from_id;
 	String processInstanceId="";
-
 	CloseableHttpClient httpClient = HttpClients.createDefault();
 	CloseableHttpResponse response=null;
 	try{
@@ -96,6 +130,11 @@ public class BotController
 	     httpClient.close();
 	}
 
+        if (message==null && (processInstanceId == null || processInstanceId == "" )){
+		LOGGER.error("Cannot start process on callback");
+		return Response.status(200).entity("{\"error\":\"Cannot start process on callback\"}").build();
+	}
+
 	if (processInstanceId != ""){
 	     HttpPost post = new HttpPost(camunda_engine+"/message");
 	     post.addHeader("Content-Type", "application/json");
@@ -104,8 +143,8 @@ public class BotController
 	    correlationMessage.put("messageName","update");
 	    correlationMessage.put("processInstanceId",processInstanceId);
 
-	    if (message!=null)
-		correlationMessage.put("processVariables",(new JSONObject()).put("message",(new JSONObject()).put("value",message)));
+	    if (json!=null)
+		correlationMessage.put("processVariables",(new JSONObject()).put("data",(new JSONObject()).put("value",json)));
 
             LOGGER.debug("UPDATE PROCESS: {} ",correlationMessage);
 
@@ -118,11 +157,12 @@ public class BotController
 	    }
 	}
 	else {
+
 	     HttpPost post = new HttpPost(camunda_engine+"/process-definition/key/"+process_key+"/start");
 	     post.addHeader("Content-Type", "application/json");
 	     JSONObject body=new JSONObject();
 	     body.put("businessKey",business_key);
-	     body.put("variables", (new JSONObject()).put("message",(new JSONObject()).put("value",message)));
+	     body.put("variables", (new JSONObject()).put("data",(new JSONObject()).put("value",json)));
              LOGGER.debug("START PROCESS: {} ",body);
 	     post.setEntity(new StringEntity(body.toString(),"UTF-8"));
 	     try{
