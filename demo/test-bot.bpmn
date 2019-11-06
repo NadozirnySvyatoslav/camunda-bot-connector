@@ -18,7 +18,7 @@
       <bpmn:extensionElements>
         <camunda:connector>
           <camunda:inputOutput>
-            <camunda:inputParameter name="url">https://api.telegram.org/bot!your-token!/sendMessage</camunda:inputParameter>
+            <camunda:inputParameter name="url">https://api.telegram.org/bot!!!your_token!!!/sendMessage</camunda:inputParameter>
             <camunda:inputParameter name="method">POST</camunda:inputParameter>
             <camunda:inputParameter name="headers">
               <camunda:map>
@@ -52,7 +52,7 @@ JSON.stringify(obj);</camunda:script>
       <bpmn:extensionElements>
         <camunda:connector>
           <camunda:inputOutput>
-            <camunda:inputParameter name="url">https://api.telegram.org/bot!your-token!/sendMessage</camunda:inputParameter>
+            <camunda:inputParameter name="url">https://api.telegram.org/bot!!!your_token!!!/sendMessage</camunda:inputParameter>
             <camunda:inputParameter name="method">POST</camunda:inputParameter>
             <camunda:inputParameter name="headers">
               <camunda:map>
@@ -82,12 +82,12 @@ JSON.stringify(obj);</camunda:script>
       <bpmn:outgoing>SequenceFlow_067fkuu</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_07c17pw</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_067fkuu" sourceRef="ExclusiveGateway_02kx34a" targetRef="Task_06h4xyy" />
+    <bpmn:sequenceFlow id="SequenceFlow_067fkuu" sourceRef="ExclusiveGateway_02kx34a" targetRef="ServiceTask_1bcv1b7" />
     <bpmn:serviceTask id="ServiceTask_1udl5uu" name="Answer to Yes">
       <bpmn:extensionElements>
         <camunda:connector>
           <camunda:inputOutput>
-            <camunda:inputParameter name="url">https://api.telegram.org/bot!your-token!/sendMessage</camunda:inputParameter>
+            <camunda:inputParameter name="url">https://api.telegram.org/bot!!!your_token!!!/sendMessage</camunda:inputParameter>
             <camunda:inputParameter name="method">POST</camunda:inputParameter>
             <camunda:inputParameter name="headers">
               <camunda:map>
@@ -107,15 +107,11 @@ JSON.stringify(obj);</camunda:script>
       <bpmn:incoming>SequenceFlow_1gsac0g</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0805ytd</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_0805ytd" sourceRef="ServiceTask_1udl5uu" targetRef="Task_06h4xyy" />
-    <bpmn:sequenceFlow id="SequenceFlow_1gsac0g" name="yes" sourceRef="ExclusiveGateway_0vpakvg" targetRef="ServiceTask_1udl5uu">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${ data.data=="yes" }</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
     <bpmn:serviceTask id="ServiceTask_1ry1e8x" name="Answer to  No">
       <bpmn:extensionElements>
         <camunda:connector>
           <camunda:inputOutput>
-            <camunda:inputParameter name="url">https://api.telegram.org/bot!your-token!/sendMessage</camunda:inputParameter>
+            <camunda:inputParameter name="url">https://api.telegram.org/bot!!!your_token!!!/sendMessage</camunda:inputParameter>
             <camunda:inputParameter name="method">POST</camunda:inputParameter>
             <camunda:inputParameter name="headers">
               <camunda:map>
@@ -138,7 +134,7 @@ JSON.stringify(obj);</camunda:script>
     <bpmn:sequenceFlow id="SequenceFlow_1gw9a0b" name="no" sourceRef="ExclusiveGateway_0vpakvg" targetRef="ServiceTask_1ry1e8x">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${ data.data=="no" }</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_106jldw" sourceRef="ServiceTask_1ry1e8x" targetRef="Task_06h4xyy" />
+    <bpmn:sequenceFlow id="SequenceFlow_106jldw" sourceRef="ServiceTask_1ry1e8x" targetRef="ServiceTask_1bcv1b7" />
     <bpmn:sequenceFlow id="SequenceFlow_0r4xvy1" sourceRef="Task_1c04a64" targetRef="ServiceTask_0k1qbrl" />
     <bpmn:scriptTask id="Task_1c04a64" name="Set chat_id" scriptFormat="javascript" camunda:resultVariable="chat_id">
       <bpmn:incoming>SequenceFlow_0bggtcb</bpmn:incoming>
@@ -149,7 +145,7 @@ JSON.stringify(obj);</camunda:script>
       <bpmn:extensionElements>
         <camunda:connector>
           <camunda:inputOutput>
-            <camunda:inputParameter name="url">https://api.telegram.org/bot!your-token!/deleteMessage</camunda:inputParameter>
+            <camunda:inputParameter name="url">https://api.telegram.org/bot!!!your_token!!!/deleteMessage</camunda:inputParameter>
             <camunda:inputParameter name="method">POST</camunda:inputParameter>
             <camunda:inputParameter name="headers">
               <camunda:map>
@@ -159,32 +155,35 @@ JSON.stringify(obj);</camunda:script>
             <camunda:inputParameter name="payload">
               <camunda:script scriptFormat="javascript">var
 text="Вибрано No";
-var obj={chat_id: chat_id,message_id:data.callback_query.message.message_id};
+var obj={chat_id: chat_id,message_id:message_id};
 JSON.stringify(obj);</camunda:script>
             </camunda:inputParameter>
           </camunda:inputOutput>
           <camunda:connectorId>http-connector</camunda:connectorId>
         </camunda:connector>
       </bpmn:extensionElements>
-      <bpmn:incoming>SequenceFlow_07c17pw</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0b2x0m0</bpmn:outgoing>
+      <bpmn:incoming>SequenceFlow_0ipwjiy</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_067fkuu</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1sqoci1</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0805ytd</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_106jldw</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0dsjd1x</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:exclusiveGateway id="ExclusiveGateway_0vpakvg" default="SequenceFlow_1sqoci1">
-      <bpmn:incoming>SequenceFlow_0b2x0m0</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_07c17pw</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1gw9a0b</bpmn:outgoing>
-      <bpmn:outgoing>SequenceFlow_1gsac0g</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1sqoci1</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1gsac0g</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_07c17pw" name="keys pressed" sourceRef="ExclusiveGateway_02kx34a" targetRef="ServiceTask_1bcv1b7">
+    <bpmn:sequenceFlow id="SequenceFlow_07c17pw" name="keys pressed" sourceRef="ExclusiveGateway_02kx34a" targetRef="ExclusiveGateway_0vpakvg">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${ data.callback_query!=null }</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_0b2x0m0" sourceRef="ServiceTask_1bcv1b7" targetRef="ExclusiveGateway_0vpakvg" />
-    <bpmn:sequenceFlow id="SequenceFlow_1sqoci1" sourceRef="ExclusiveGateway_0vpakvg" targetRef="Task_06h4xyy" />
+    <bpmn:sequenceFlow id="SequenceFlow_1sqoci1" sourceRef="ExclusiveGateway_0vpakvg" targetRef="ServiceTask_1bcv1b7" />
     <bpmn:serviceTask id="ServiceTask_0ejqg82" name="Start Poll&#10;Yes/No">
       <bpmn:extensionElements>
         <camunda:connector>
           <camunda:inputOutput>
-            <camunda:inputParameter name="url">https://api.telegram.org/bot!your-token!/sendMessage</camunda:inputParameter>
+            <camunda:inputParameter name="url">https://api.telegram.org/bot!!!your_token!!!/sendMessage</camunda:inputParameter>
             <camunda:inputParameter name="method">POST</camunda:inputParameter>
             <camunda:inputParameter name="headers">
               <camunda:map>
@@ -199,6 +198,9 @@ reply_markup:{inline_keyboard:[[{text:"Yes",callback_data:"test-bot:"+execution.
 ,{text:"No",callback_data:"test-bot:"+execution.getBusinessKey()+":no"}]]}};
 JSON.stringify(obj);</camunda:script>
             </camunda:inputParameter>
+            <camunda:outputParameter name="message_id">
+              <camunda:script scriptFormat="javascript">S(connector.getVariable("response")).prop("result").prop("message_id").value();</camunda:script>
+            </camunda:outputParameter>
           </camunda:inputOutput>
           <camunda:connectorId>http-connector</camunda:connectorId>
         </camunda:connector>
@@ -206,11 +208,11 @@ JSON.stringify(obj);</camunda:script>
       <bpmn:incoming>SequenceFlow_0v09t8l</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1tre0xf</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_1tre0xf" sourceRef="ServiceTask_0ejqg82" targetRef="IntermediateThrowEvent_0by4mul" />
+    <bpmn:sequenceFlow id="SequenceFlow_1tre0xf" sourceRef="ServiceTask_0ejqg82" targetRef="ExclusiveGateway_1yxihxk" />
     <bpmn:sequenceFlow id="SequenceFlow_118zys8" sourceRef="ExclusiveGateway_1sb3xv1" targetRef="Task_06h4xyy" />
     <bpmn:sequenceFlow id="SequenceFlow_1sucde5" sourceRef="IntermediateThrowEvent_0by4mul" targetRef="ExclusiveGateway_02kx34a" />
     <bpmn:intermediateCatchEvent id="IntermediateThrowEvent_0by4mul" name="wait for press key">
-      <bpmn:incoming>SequenceFlow_1tre0xf</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_02il4i6</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1sucde5</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_1lmjhm2" />
     </bpmn:intermediateCatchEvent>
@@ -220,12 +222,9 @@ JSON.stringify(obj);</camunda:script>
       <bpmn:outgoing>SequenceFlow_06whc1e</bpmn:outgoing>
     </bpmn:eventBasedGateway>
     <bpmn:task id="Task_06h4xyy" name="Blank task">
-      <bpmn:incoming>SequenceFlow_106jldw</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_0805ytd</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1sh01hq</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_1sqoci1</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_067fkuu</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_118zys8</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0dsjd1x</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0cxryrs</bpmn:outgoing>
     </bpmn:task>
     <bpmn:sequenceFlow id="SequenceFlow_0cxryrs" sourceRef="Task_06h4xyy" targetRef="ExclusiveGateway_0m6xcnq" />
@@ -239,6 +238,26 @@ JSON.stringify(obj);</camunda:script>
     <bpmn:sequenceFlow id="SequenceFlow_16n8u1r" sourceRef="ExclusiveGateway_0m6xcnq" targetRef="IntermediateCatchEvent_00i8u1g" />
     <bpmn:sequenceFlow id="SequenceFlow_06whc1e" sourceRef="ExclusiveGateway_0m6xcnq" targetRef="IntermediateThrowEvent_1723ayr" />
     <bpmn:sequenceFlow id="SequenceFlow_07vhuzi" sourceRef="IntermediateCatchEvent_00i8u1g" targetRef="ServiceTask_0cnj80i" />
+    <bpmn:sequenceFlow id="SequenceFlow_02il4i6" sourceRef="ExclusiveGateway_1yxihxk" targetRef="IntermediateThrowEvent_0by4mul" />
+    <bpmn:eventBasedGateway id="ExclusiveGateway_1yxihxk">
+      <bpmn:incoming>SequenceFlow_1tre0xf</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_02il4i6</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_07umrvx</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1e6guax" name="10min">
+      <bpmn:incoming>SequenceFlow_07umrvx</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ipwjiy</bpmn:outgoing>
+      <bpmn:timerEventDefinition>
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT10M</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_07umrvx" sourceRef="ExclusiveGateway_1yxihxk" targetRef="IntermediateCatchEvent_1e6guax" />
+    <bpmn:sequenceFlow id="SequenceFlow_0ipwjiy" sourceRef="IntermediateCatchEvent_1e6guax" targetRef="ServiceTask_1bcv1b7" />
+    <bpmn:sequenceFlow id="SequenceFlow_0dsjd1x" sourceRef="ServiceTask_1bcv1b7" targetRef="Task_06h4xyy" />
+    <bpmn:sequenceFlow id="SequenceFlow_0805ytd" sourceRef="ServiceTask_1udl5uu" targetRef="ServiceTask_1bcv1b7" />
+    <bpmn:sequenceFlow id="SequenceFlow_1gsac0g" name="yes" sourceRef="ExclusiveGateway_0vpakvg" targetRef="ServiceTask_1udl5uu">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${ data.data=="yes" }</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmn:message id="Message_1lmjhm2" name="update" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -292,52 +311,36 @@ JSON.stringify(obj);</camunda:script>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0v09t8l_di" bpmnElement="SequenceFlow_0v09t8l">
         <di:waypoint x="800" y="425" />
-        <di:waypoint x="800" y="620" />
-        <di:waypoint x="730" y="620" />
+        <di:waypoint x="800" y="580" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="805" y="520" width="20" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ExclusiveGateway_02kx34a_di" bpmnElement="ExclusiveGateway_02kx34a" isMarkerVisible="true">
-        <dc:Bounds x="505" y="475" width="50" height="50" />
+        <dc:Bounds x="235" y="455" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_067fkuu_di" bpmnElement="SequenceFlow_067fkuu">
-        <di:waypoint x="555" y="500" />
-        <di:waypoint x="590" y="500" />
-        <di:waypoint x="590" y="270" />
+        <di:waypoint x="285" y="480" />
+        <di:waypoint x="440" y="480" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_1udl5uu_di" bpmnElement="ServiceTask_1udl5uu" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
-        <dc:Bounds x="380" y="250" width="100" height="80" />
+        <dc:Bounds x="300" y="280" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_0805ytd_di" bpmnElement="SequenceFlow_0805ytd">
-        <di:waypoint x="480" y="290" />
-        <di:waypoint x="515" y="290" />
-        <di:waypoint x="515" y="240" />
-        <di:waypoint x="550" y="240" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_1gsac0g_di" bpmnElement="SequenceFlow_1gsac0g">
-        <di:waypoint x="350" y="375" />
-        <di:waypoint x="350" y="290" />
-        <di:waypoint x="380" y="290" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="357" y="330" width="17" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_1ry1e8x_di" bpmnElement="ServiceTask_1ry1e8x" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
-        <dc:Bounds x="230" y="250" width="100" height="80" />
+        <dc:Bounds x="370" y="170" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1gw9a0b_di" bpmnElement="SequenceFlow_1gw9a0b">
-        <di:waypoint x="325" y="400" />
-        <di:waypoint x="280" y="400" />
-        <di:waypoint x="280" y="330" />
+        <di:waypoint x="260" y="375" />
+        <di:waypoint x="260" y="210" />
+        <di:waypoint x="370" y="210" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="296" y="382" width="13" height="14" />
+          <dc:Bounds x="313" y="193" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_106jldw_di" bpmnElement="SequenceFlow_106jldw">
-        <di:waypoint x="280" y="250" />
-        <di:waypoint x="280" y="210" />
-        <di:waypoint x="550" y="210" />
+        <di:waypoint x="470" y="210" />
+        <di:waypoint x="510" y="210" />
+        <di:waypoint x="510" y="430" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0r4xvy1_di" bpmnElement="SequenceFlow_0r4xvy1">
         <di:waypoint x="400" y="120" />
@@ -347,33 +350,29 @@ JSON.stringify(obj);</camunda:script>
         <dc:Bounds x="300" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_1bcv1b7_di" bpmnElement="ServiceTask_1bcv1b7" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
-        <dc:Bounds x="300" y="460" width="100" height="80" />
+        <dc:Bounds x="440" y="430" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ExclusiveGateway_0vpakvg_di" bpmnElement="ExclusiveGateway_0vpakvg" isMarkerVisible="true">
-        <dc:Bounds x="325" y="375" width="50" height="50" />
+        <dc:Bounds x="235" y="375" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_07c17pw_di" bpmnElement="SequenceFlow_07c17pw">
-        <di:waypoint x="505" y="500" />
-        <di:waypoint x="400" y="500" />
+        <di:waypoint x="260" y="455" />
+        <di:waypoint x="260" y="425" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="422" y="482" width="65" height="14" />
+          <dc:Bounds x="227" y="440" width="65" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0b2x0m0_di" bpmnElement="SequenceFlow_0b2x0m0">
-        <di:waypoint x="350" y="460" />
-        <di:waypoint x="350" y="425" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1sqoci1_di" bpmnElement="SequenceFlow_1sqoci1">
-        <di:waypoint x="375" y="400" />
-        <di:waypoint x="570" y="400" />
-        <di:waypoint x="570" y="270" />
+        <di:waypoint x="285" y="400" />
+        <di:waypoint x="470" y="400" />
+        <di:waypoint x="470" y="430" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_0ejqg82_di" bpmnElement="ServiceTask_0ejqg82" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
-        <dc:Bounds x="630" y="580" width="100" height="80" />
+        <dc:Bounds x="750" y="580" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1tre0xf_di" bpmnElement="SequenceFlow_1tre0xf">
-        <di:waypoint x="630" y="620" />
-        <di:waypoint x="548" y="620" />
+        <di:waypoint x="750" y="620" />
+        <di:waypoint x="685" y="620" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_118zys8_di" bpmnElement="SequenceFlow_118zys8">
         <di:waypoint x="775" y="400" />
@@ -381,13 +380,14 @@ JSON.stringify(obj);</camunda:script>
         <di:waypoint x="610" y="270" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1sucde5_di" bpmnElement="SequenceFlow_1sucde5">
-        <di:waypoint x="530" y="602" />
-        <di:waypoint x="530" y="525" />
+        <di:waypoint x="552" y="620" />
+        <di:waypoint x="260" y="620" />
+        <di:waypoint x="260" y="505" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="IntermediateCatchEvent_081ujtk_di" bpmnElement="IntermediateThrowEvent_0by4mul">
-        <dc:Bounds x="512" y="602" width="36" height="36" />
+        <dc:Bounds x="552" y="602" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="489" y="645" width="86" height="14" />
+          <dc:Bounds x="527" y="578" width="86" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="EventBasedGateway_02jli9g_di" bpmnElement="ExclusiveGateway_0m6xcnq">
@@ -419,6 +419,46 @@ JSON.stringify(obj);</camunda:script>
         <di:waypoint x="918" y="160" />
         <di:waypoint x="960" y="160" />
         <di:waypoint x="960" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_02il4i6_di" bpmnElement="SequenceFlow_02il4i6">
+        <di:waypoint x="635" y="620" />
+        <di:waypoint x="588" y="620" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EventBasedGateway_184hud6_di" bpmnElement="ExclusiveGateway_1yxihxk">
+        <dc:Bounds x="635" y="595" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_1e6guax_di" bpmnElement="IntermediateCatchEvent_1e6guax">
+        <dc:Bounds x="642" y="522" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="645" y="498" width="30" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_07umrvx_di" bpmnElement="SequenceFlow_07umrvx">
+        <di:waypoint x="660" y="595" />
+        <di:waypoint x="660" y="558" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ipwjiy_di" bpmnElement="SequenceFlow_0ipwjiy">
+        <di:waypoint x="642" y="540" />
+        <di:waypoint x="490" y="540" />
+        <di:waypoint x="490" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0dsjd1x_di" bpmnElement="SequenceFlow_0dsjd1x">
+        <di:waypoint x="540" y="470" />
+        <di:waypoint x="570" y="470" />
+        <di:waypoint x="570" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0805ytd_di" bpmnElement="SequenceFlow_0805ytd">
+        <di:waypoint x="400" y="320" />
+        <di:waypoint x="490" y="320" />
+        <di:waypoint x="490" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1gsac0g_di" bpmnElement="SequenceFlow_1gsac0g">
+        <di:waypoint x="260" y="375" />
+        <di:waypoint x="260" y="320" />
+        <di:waypoint x="300" y="320" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="268" y="293" width="17" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
