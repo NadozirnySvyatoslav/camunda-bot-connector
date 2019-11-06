@@ -36,6 +36,9 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.HashMap;
 
+import javax.xml.bind.DatatypeConverter;
+import java.security.MessageDigest;
+
 import java.util.regex.Matcher;  
 import java.util.regex.Pattern;  
  
@@ -86,14 +89,22 @@ public class BotController
 	    JSONObject chat=message.getJSONObject("chat");
     	    int chat_id=chat.getInt("id");
 	    int from_id=from.getInt("id");
-	    business_key=chat_id+"_"+from_id;
+	    String hash="";
+	    try{
+	    MessageDigest digest = MessageDigest.getInstance("MD5");
+	    byte[] bytes = digest.digest(((String)(chat_id+token+from_id)).getBytes("UTF-8"));
+	    hash=DatatypeConverter.printHexBinary(bytes);
+	    }catch(Exception e){
+		business_key=chat_id+token.replace(':','_')+from_id;
+	    }
+	    business_key=hash;
 	}
 
 	if (callback_query != null){
-	    Pattern  p=Pattern.compile("([a-zA-A0-9_\\-]*):([a-zA-A0-9_\\-]*):([a-zA-A0-9_\\-]*)");
+	    Pattern  p=Pattern.compile("([a-zA-Z0-9_\\-]*):([a-zA-Z0-9_\\-]*):([a-zA-Z0-9_\\-]*)");
 	    Matcher m=p.matcher(callback_query.getString("data"));
 	    if (!m.matches()){
-		LOGGER.error("No callback->data process_key:business_key:data found= {}",callback_query.getString("data"));
+		LOGGER.error("No callback->data process_key:business_key:data found={}",callback_query.getString("data"));
 		return Response.status(200).entity("{\"error\":\"No callback->data process_key:business_key:data found\"}").build();
 
 	    }
