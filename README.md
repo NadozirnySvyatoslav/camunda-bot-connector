@@ -29,11 +29,11 @@ with your Telegram-bot tokens
 
 4. Deploy your BPMN-process (demo/test-bot.bpmn can be used as an example)
 
-![BPMN process](demo/demo.png)
+![BPMN process](demo/demo.PNG)
 
 
 5. Enjoy your bot
 
-![Start bot](demo/step1.png)
+![Start bot](demo/step1.PNG)
 
-![Click YES](demo/step2.png)
+![Click YES](demo/step2.PNG)
