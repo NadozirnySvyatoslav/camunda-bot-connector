@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+<bots>
+    <bot>
+        <token>972314463:AAFcMvanU-YKMasdasdsadasdV7ILJlhwkY</token>
+        <process_key>test-bot</process_key>
+    </bot>
+    <bot>
+        <token>918999146:AAEmmWvasadasdsadPlfRW1eeO-GB1c50Ek</token>
+        <process_key>test-bot</process_key>
+    </bot>
+
+</bots>
+<camunda_engine>http://localhost:8080/engine-rest</camunda_engine>
+</configuration>
