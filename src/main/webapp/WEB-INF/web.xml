@@ -3,7 +3,7 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
  
 <web-app>
-    <display-name>telegram Bot to Camunda Connector</display-name>
+    <display-name>Telegram Bot to Camunda Connector</display-name>
     <!-- Auto scan REST service -->
      
 <servlet>
