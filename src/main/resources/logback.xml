@@ -7,7 +7,7 @@
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <append>true</append>
-        <file>${catalina.base}/logs/bot-connector.%d{yyyy-MM-dd}.log</file>
+        <file>${catalina.base}/logs/bot-connector.log</file>
 	<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/archived/bot-connector.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <!-- each archived file, size max 10MB -->
